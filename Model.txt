@@ -1,0 +1,4 @@
+Model and Dataset Files:
+
+- Face Recognition Model: (https://colab.research.google.com/drive/1NWVkfVhQEDpcPFvKWXasPfq-alJkvEYQ?usp=sharing)
+- Files for Dataset Creation: (https://colab.research.google.com/drive/1NWVkfVhQEDpcPFvKWXasPfq-alJkvEYQ?usp=sharing)

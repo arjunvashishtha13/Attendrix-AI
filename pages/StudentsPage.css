@@ -1,0 +1,72 @@
+:root {
+  --teal-green: #008080;
+  --beige: #f5f5dc;
+  --light-bg: #ffffff;
+  --dark-bg: #333;
+}
+
+body {
+  background-color: var(--beige);
+}
+
+.student-container {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.student-profile {
+  background-color: var(--light-bg);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.student-profile:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.profile-header {
+  margin-bottom: 1rem;
+}
+
+.profile-pic {
+  width: 100%;
+  max-width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid var(--teal-green);
+  transition: transform 0.3s ease-in-out;
+}
+
+.profile-pic:hover {
+  transform: scale(1.05);
+}
+
+.student-name {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.student-details {
+  font-size: 1rem;
+  color: var(--dark-bg);
+}
+
+.profile-actions .action-button {
+  margin: 0.5rem;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.action-button:hover {
+  background-color: var(--teal-green);
+  color: var(--light-bg);
+  transform: scale(1.05);
+}
+
+.action-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.3);
+}

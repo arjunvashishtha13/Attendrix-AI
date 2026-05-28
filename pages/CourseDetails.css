@@ -1,0 +1,32 @@
+.course-details-container {
+  padding: 2rem;
+  background-color: var(--beige);
+}
+
+.card {
+  margin-top: 2rem;
+  border: 1px solid var(--teal-green);
+}
+
+.card-header {
+  background-color: var(--teal-green);
+  color: var(--light-bg);
+}
+
+h2 {
+  color: var(--teal-green);
+}
+
+h5 {
+  margin-top: 1rem;
+  color: var(--teal-green);
+}
+
+p {
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  background-color: var(--teal-green);
+  color: var(--light-bg);
+}

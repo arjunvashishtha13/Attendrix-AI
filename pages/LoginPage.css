@@ -1,0 +1,85 @@
+:root {
+  --teal-green: #008080;
+  --beige: #f5f5dc;
+  --light-bg: #ffffff;
+  --dark-bg: #333;
+  --darker-text: #000000;
+}
+
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--light-bg);
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-control::placeholder {
+  color: var(--darker-text);
+}
+
+body.dark-mode .form-label {
+  color: var(--darker-text);
+}
+
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--beige);
+}
+
+.login-form-container {
+  background-color: var(--light-bg);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.login-form .action-button {
+  margin-top: 1rem;
+}
+
+
+.form-control {
+  background-color: var(--light-bg);
+  border: 1px solid var(--teal-green);
+  border-radius: 4px;
+  font-size: 1rem;
+  text-align: left;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+.form-control:focus {
+  border-color: var(--teal-green);
+  box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25);
+}
+
+
+.action-button {
+  background-color: var(--teal-green);
+  color: var(--light-bg);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.action-button:hover {
+  background-color: darken(var(--teal-green), 10%);
+}
+
+.action-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.3);
+}
+.form-label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}

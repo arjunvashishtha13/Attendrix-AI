@@ -1,0 +1,55 @@
+:root {
+  --teal-green: #008080;
+  --beige: #f5f5dc;
+  --light-bg: #ffffff;
+  --dark-bg: #333;
+}
+
+body {
+  background-color: var(--beige);
+}
+
+.register-container {
+  min-height: 100vh;
+}
+
+.register-form {
+  background-color: var(--light-bg);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.register-form:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.register-form h2 {
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.toggle-password:hover {
+  color: var(--teal-green);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
