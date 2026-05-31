@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 5000,
   mongoUri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/attendrix',
   jwtSecret: process.env.JWT_SECRET || 'attendrix-dev-secret-change-in-production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
@@ -17,7 +17,7 @@ module.exports = {
   oauth: {
     clientId: process.env.OAUTH_CLIENT_ID || 'client_id',
     clientSecret: process.env.OAUTH_CLIENT_SECRET || 'client_secret',
-    redirectUri: process.env.OAUTH_REDIRECT_URI || 'http://localhost:3000/api/v1/auth/oauth/callback',
+    redirectUri: process.env.OAUTH_REDIRECT_URI || 'http://localhost:5000/api/v1/auth/oauth/callback',
     providerBaseUrl: process.env.OAUTH_PROVIDER_URL || 'https://channeli.in',
     state: process.env.OAUTH_STATE || 'attendrix-state',
   },

@@ -1,10 +1,6 @@
 const crypto = require('crypto');
 const { faceConfidenceThreshold } = require('../config/env');
 
-/**
- * Generates a deterministic pseudo-embedding from image buffer.
- * Replace this module with PyTorch/FaceNet integration for production ML.
- */
 const extractEmbedding = (imageBuffer) => {
   const hash = crypto.createHash('sha256').update(imageBuffer).digest();
   const embedding = [];

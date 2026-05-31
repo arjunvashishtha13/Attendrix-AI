@@ -18,6 +18,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
+    if (!error.response) {
+      return Promise.reject(
+        new Error(
+          'Cannot reach Attendrix API. Start the backend: cd backend && npm run dev (port 5000)'
+        )
+      );
+    }
     const message = error.response?.data?.message || error.message || 'Request failed';
     return Promise.reject(new Error(message));
   }

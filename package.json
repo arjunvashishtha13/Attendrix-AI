@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Attendrix AI — AI-Powered Attendance Platform",
-  "proxy": "http://localhost:3000",
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "axios": "^1.7.5",
     "lucide-react": "^0.441.0",
@@ -18,8 +18,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev:backend": "npm run dev --prefix backend",
+    "seed": "npm run seed --prefix backend"
   },
   "eslintConfig": {
     "extends": ["react-app"]
