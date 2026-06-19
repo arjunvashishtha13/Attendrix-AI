@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Upload, Save } from 'lucide-react';
+import { Camera, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
@@ -96,20 +96,35 @@ const ProfilePage = () => {
           )}
         </form>
 
-        <div className="card">
-          <h3 className="font-semibold text-slate-900 dark:text-white">Face registration</h3>
-          <p className="mt-1 text-sm text-slate-500">Upload a clear photo for AI-powered webcam attendance.</p>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFaceUpload} />
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="btn-secondary mt-4"
-            disabled={uploading}
-          >
-            <Upload className="h-4 w-4" />
-            {uploading ? 'Uploading...' : 'Register face'}
-          </button>
-        </div>
+        {user.role === 'student' && (
+          <div className="card border-2 border-attendrix-rose/20 bg-rose-50/50 dark:border-rose-900/30 dark:bg-rose-900/10">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                  Face Enrollment Status
+                  {user.hasEnrolledFace ? (
+                    <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">Enrolled</span>
+                  ) : (
+                    <span className="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full font-medium">Pending</span>
+                  )}
+                </h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  {user.hasEnrolledFace 
+                    ? 'Your facial features are securely stored for AI attendance verification.'
+                    : 'You must enroll your face to mark attendance in class.'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => window.location.href = '/profile/enroll-face'}
+              className="btn-primary mt-4"
+            >
+              <Camera className="h-4 w-4" />
+              {user.hasEnrolledFace ? 'Re-enroll Face' : 'Start Face Enrollment'}
+            </button>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

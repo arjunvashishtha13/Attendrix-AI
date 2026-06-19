@@ -5,12 +5,14 @@ const courseRoutes = require('./courseRoutes');
 const attendanceRoutes = require('./attendanceRoutes');
 const analyticsRoutes = require('./analyticsRoutes');
 const exportRoutes = require('./exportRoutes');
+const sessionRoutes = require('./sessionRoutes');
 
 const router = express.Router();
 
 router.use('/auth', authRoutes);
 router.use('/profile', profileRoutes);
 router.use('/courses', courseRoutes);
+router.use('/sessions', sessionRoutes);
 router.use('/attendance', attendanceRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/export', exportRoutes);

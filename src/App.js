@@ -15,6 +15,7 @@ import CoursesPage from './pages/courses/CoursesPage';
 import CourseDetailPage from './pages/courses/CourseDetailPage';
 import WebcamPage from './pages/webcam/WebcamPage';
 import ProfilePage from './pages/profile/ProfilePage';
+import EnrollFacePage from './pages/profile/EnrollFacePage';
 import StudentsPage from './pages/students/StudentsPage';
 import AdminPage from './pages/admin/AdminPage';
 
@@ -79,7 +80,7 @@ function App() {
             <Route
               path="/webcam"
               element={
-                <ProtectedRoute roles={['admin', 'teacher']}>
+                <ProtectedRoute roles={['admin', 'teacher', 'student']}>
                   <WebcamPage />
                 </ProtectedRoute>
               }
@@ -105,6 +106,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile/enroll-face"
+              element={
+                <ProtectedRoute>
+                  <EnrollFacePage />
                 </ProtectedRoute>
               }
             />

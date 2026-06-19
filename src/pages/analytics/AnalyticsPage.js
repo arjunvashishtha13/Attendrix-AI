@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import StatCard from '../../components/ui/StatCard';
-import { MonthlyTrendChart, PresentAbsentPie, CourseBarChart } from '../../components/charts/AttendanceCharts';
+import { MonthlyTrendChart, PresentAbsentPie, CourseBarChart, SessionBarChart } from '../../components/charts/AttendanceCharts';
 import { analyticsApi, courseApi, attendanceApi, downloadWithAuth, exportApi } from '../../services/api';
 import { Percent, UserCheck, UserX } from 'lucide-react';
 
@@ -93,7 +93,11 @@ const AnalyticsPage = () => {
             <MonthlyTrendChart data={stats?.monthlyTrends || []} />
             <PresentAbsentPie present={stats?.present} absent={stats?.absent} />
           </div>
-          <CourseBarChart data={stats?.courseBreakdown || []} />
+          {courseId ? (
+            <SessionBarChart data={stats?.sessionBreakdown || []} />
+          ) : (
+            <CourseBarChart data={stats?.courseBreakdown || []} />
+          )}
         </div>
       )}
     </DashboardLayout>

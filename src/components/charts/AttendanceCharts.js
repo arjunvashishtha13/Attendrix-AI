@@ -53,6 +53,21 @@ export const CourseBarChart = ({ data = [] }) => (
   </div>
 );
 
+export const SessionBarChart = ({ data = [] }) => (
+  <div className="card h-80">
+    <h3 className="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">Attendance by Session</h3>
+    <ResponsiveContainer width="100%" height="85%">
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
+        <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="#94a3b8" />
+        <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
+        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} />
+        <Bar dataKey="percentage" fill="#e11d48" radius={[8, 8, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+);
+
 export const PresentAbsentPie = ({ present = 0, absent = 0 }) => {
   const data = [
     { name: 'Present', value: present },

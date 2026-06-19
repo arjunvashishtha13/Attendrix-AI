@@ -1,14 +1,4 @@
-const crypto = require('crypto');
 const { faceConfidenceThreshold } = require('../config/env');
-
-const extractEmbedding = (imageBuffer) => {
-  const hash = crypto.createHash('sha256').update(imageBuffer).digest();
-  const embedding = [];
-  for (let i = 0; i < 128; i++) {
-    embedding.push((hash[i % hash.length] / 255) * 2 - 1);
-  }
-  return embedding;
-};
 
 const euclideanDistance = (a, b) => {
   if (!a?.length || !b?.length || a.length !== b.length) return Infinity;
@@ -20,6 +10,8 @@ const euclideanDistance = (a, b) => {
   return Math.sqrt(sum);
 };
 
+// With face-api.js euclidean distance, 0.4 is usually a good threshold for strict match.
+// 0.6 is loose. Our distanceToConfidence maps distance 0 -> 1.0 confidence, distance 0.4 -> 0.8 confidence.
 const distanceToConfidence = (distance) => {
   const confidence = Math.max(0, Math.min(1, 1 - distance / 2));
   return Math.round(confidence * 1000) / 1000;
@@ -30,16 +22,20 @@ const findBestMatch = (probeEmbedding, candidates) => {
   let bestDistance = Infinity;
 
   candidates.forEach((candidate) => {
-    if (!candidate.faceEmbedding?.length) return;
-    const distance = euclideanDistance(probeEmbedding, candidate.faceEmbedding);
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      best = candidate;
-    }
+    if (!candidate.faceEmbeddings || candidate.faceEmbeddings.length === 0) return;
+    
+    // Compare live probe against ALL registered embeddings for this candidate
+    candidate.faceEmbeddings.forEach(enrolledEmbedding => {
+      const distance = euclideanDistance(probeEmbedding, enrolledEmbedding);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = candidate;
+      }
+    });
   });
 
   const confidence = best ? distanceToConfidence(bestDistance) : 0;
-  const matched = confidence >= faceConfidenceThreshold;
+  const matched = confidence >= faceConfidenceThreshold; // Using env threshold
 
   return {
     matched,
@@ -56,7 +52,7 @@ const findBestMatch = (probeEmbedding, candidates) => {
 };
 
 module.exports = {
-  extractEmbedding,
+  euclideanDistance,
   findBestMatch,
   faceConfidenceThreshold,
 };

@@ -1,4 +1,5 @@
 const Attendance = require('../models/Attendance');
+const CourseSession = require('../models/CourseSession');
 const Course = require('../models/Course');
 const User = require('../models/User');
 const AppError = require('../utils/AppError');
@@ -36,21 +37,53 @@ exports.markAttendance = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, record });
 });
 
-exports.webcamAttendance = asyncHandler(async (req, res) => {
-  const { courseId } = req.body;
-  if (!req.file?.buffer) throw new AppError('Webcam capture required', 400);
-  if (!courseId) throw new AppError('courseId required', 400);
+function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
+  const R = 6371e3; // Radius of the earth in m
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // Distance in m
+}
 
-  const course = await Course.findById(courseId).populate('students');
-  if (!course) throw new AppError('Course not found', 404);
+exports.markLiveAttendance = asyncHandler(async (req, res) => {
+  const { sessionId, liveEmbedding, latitude, longitude } = req.body;
+  if (!sessionId || !liveEmbedding || !Array.isArray(liveEmbedding)) {
+    throw new AppError('sessionId and liveEmbedding are required', 400);
+  }
+
+  const session = await CourseSession.findById(sessionId).populate('course');
+  if (!session) throw new AppError('Session not found', 404);
+  if (!session.isActive) throw new AppError('This attendance session is closed', 403);
+
+  const course = session.course;
+
+  if (session.location && session.location.lat && session.location.lng) {
+    if (!latitude || !longitude) {
+      throw new AppError('Location data is required for this session. Please enable GPS.', 403);
+    }
+    const distance = getDistanceFromLatLonInM(
+      session.location.lat, session.location.lng,
+      parseFloat(latitude), parseFloat(longitude)
+    );
+    if (distance > (session.location.radius || 50)) {
+      throw new AppError(`You are too far from the classroom (${Math.round(distance)}m). You must be within ${session.location.radius || 50}m.`, 403);
+    }
+  }
 
   const students = await User.find({
     _id: { $in: course.students },
-    faceEmbedding: { $exists: true, $not: { $size: 0 } },
+    hasEnrolledFace: true,
   });
 
-  const probeEmbedding = extractEmbedding(req.file.buffer);
-  const match = findBestMatch(probeEmbedding, students);
+  if (students.length === 0) {
+    throw new AppError('No students have enrolled faces for this course', 400);
+  }
+
+  const match = findBestMatch(liveEmbedding, students);
 
   if (!match.matched) {
     return res.status(422).json({
@@ -59,19 +92,26 @@ exports.webcamAttendance = asyncHandler(async (req, res) => {
     });
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  if (req.user.role === 'student' && match.student._id.toString() !== req.user._id.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: 'You can only mark attendance for yourself. Face mismatch.',
+    });
+  }
 
   const record = await Attendance.findOneAndUpdate(
-    { course: courseId, student: match.student._id, date: today },
+    { session: session._id, student: match.student._id },
     {
-      course: courseId,
+      course: course._id,
+      session: session._id,
       student: match.student._id,
       status: 'present',
       method: 'webcam',
       confidence: match.confidence,
       markedBy: req.user._id,
       date: new Date(),
+      locationCaptured: latitude && longitude ? { lat: parseFloat(latitude), lng: parseFloat(longitude) } : undefined,
+      livenessPassed: true,
     },
     { upsert: true, new: true }
   )

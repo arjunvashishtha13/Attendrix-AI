@@ -43,6 +43,22 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
     return { ...c, percentage: Math.round((c.present / t) * 100) };
   });
 
+  const bySession = {};
+  records.forEach((r) => {
+    if (!r.session) return;
+    const sId = r.session.toString();
+    const dateStr = new Date(r.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const sessionLabel = `Session: ${dateStr}`;
+    if (!bySession[sId]) bySession[sId] = { session: sId, label: sessionLabel, present: 0, absent: 0 };
+    if (r.status === 'present') bySession[sId].present += 1;
+    else bySession[sId].absent += 1;
+  });
+
+  const sessionStats = Object.values(bySession).map((s) => {
+    const t = s.present + s.absent || 1;
+    return { ...s, percentage: Math.round((s.present / t) * 100) };
+  }).sort((a, b) => a.label.localeCompare(b.label));
+
   res.json({
     success: true,
     stats: {
@@ -53,6 +69,7 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
       attendancePercentage: Math.round((present / total) * 100),
       monthlyTrends: Object.values(monthlyMap).sort((a, b) => a.month.localeCompare(b.month)),
       courseBreakdown: courseStats,
+      sessionBreakdown: sessionStats,
       recentRecords: records.slice(0, 10),
     },
   });

@@ -25,13 +25,13 @@ const Sidebar = ({ onNavigate }) => {
   const studentLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/attendance', label: 'My Attendance', icon: BookOpen },
+    { to: '/webcam', label: 'AI Attendance', icon: Camera },
     { to: '/profile', label: 'Profile', icon: UserCircle },
   ];
 
   const teacherLinks = [
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/courses', label: 'Courses', icon: BookOpen },
-    { to: '/webcam', label: 'AI Attendance', icon: Camera },
     { to: '/students', label: 'Students', icon: Users },
     { to: '/analytics', label: 'Analytics', icon: BarChart3 },
     { to: '/profile', label: 'Profile', icon: UserCircle },

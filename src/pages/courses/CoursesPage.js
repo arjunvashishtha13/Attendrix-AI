@@ -53,7 +53,10 @@ const CoursesPage = () => {
           <form onSubmit={handleCreate} className="card grid gap-4 sm:grid-cols-4">
             <input className="input-field" placeholder="Code" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} required />
             <input className="input-field sm:col-span-2" placeholder="Course name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-            <button type="submit" className="btn-primary"><Plus className="h-4 w-4" /> Add</button>
+            <button type="submit" className="btn-primary">
+              {(!form.code && !form.name) && <Plus className="h-4 w-4" />} 
+              {(!form.code && !form.name) ? 'Add' : 'Save Course'}
+            </button>
           </form>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

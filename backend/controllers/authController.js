@@ -70,6 +70,20 @@ exports.getMe = asyncHandler(async (req, res) => {
   res.json({ success: true, user: req.user });
 });
 
+exports.enrollFace = asyncHandler(async (req, res) => {
+  const { embeddings } = req.body;
+  if (!embeddings || !Array.isArray(embeddings) || embeddings.length === 0) {
+    throw new AppError('Face embeddings array is required', 400);
+  }
+
+  const user = await User.findById(req.user._id);
+  user.faceEmbeddings = embeddings;
+  user.hasEnrolledFace = true;
+  await user.save();
+
+  res.json({ success: true, message: 'Face enrolled successfully' });
+});
+
 exports.oauthRedirect = (req, res) => {
   const url = `${oauth.providerBaseUrl}/oauth/authorise/?client_id=${oauth.clientId}&redirect_uri=${encodeURIComponent(oauth.redirectUri)}&state=${oauth.state}`;
   res.redirect(url);

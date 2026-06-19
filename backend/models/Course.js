@@ -8,6 +8,11 @@ const courseSchema = new mongoose.Schema(
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     schedule: { type: String, default: '' },
     totalSessions: { type: Number, default: 30 },
+    location: {
+      lat: { type: Number },
+      lng: { type: Number },
+      radius: { type: Number, default: 50 } // default 50 meters
+    },
   },
   { timestamps: true }
 );

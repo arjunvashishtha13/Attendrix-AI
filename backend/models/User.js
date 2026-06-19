@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema(
       semester: { type: Number, default: 1 },
       phone: { type: String, default: '' },
     },
-    faceEmbedding: { type: [Number], default: [] },
+    faceEmbeddings: { type: [[Number]], default: [] },
+    hasEnrolledFace: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

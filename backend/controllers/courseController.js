@@ -4,7 +4,7 @@ const AppError = require('../utils/AppError');
 const asyncHandler = require('../middleware/asyncHandler');
 
 exports.createCourse = asyncHandler(async (req, res) => {
-  const { code, name, schedule, studentIds } = req.body;
+  const { code, name, schedule, studentIds, location } = req.body;
   if (!code || !name) throw new AppError('Course code and name required', 400);
 
   const teacherId = req.user.role === 'admin' ? req.body.teacherId || req.user._id : req.user._id;
@@ -15,6 +15,7 @@ exports.createCourse = asyncHandler(async (req, res) => {
     teacher: teacherId,
     students: studentIds || [],
     schedule,
+    location,
   });
 
   await course.populate('teacher', 'username profile email role');
@@ -50,11 +51,12 @@ exports.updateCourse = asyncHandler(async (req, res) => {
     throw new AppError('Not authorized', 403);
   }
 
-  const { name, schedule, studentIds, totalSessions } = req.body;
+  const { name, schedule, studentIds, totalSessions, location } = req.body;
   if (name) course.name = name;
   if (schedule) course.schedule = schedule;
   if (totalSessions) course.totalSessions = totalSessions;
   if (studentIds) course.students = studentIds;
+  if (location) course.location = location;
 
   await course.save();
   res.json({ success: true, course });

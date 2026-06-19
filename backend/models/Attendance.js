@@ -9,7 +9,9 @@ const attendanceSchema = new mongoose.Schema(
     method: { type: String, enum: ['manual', 'webcam', 'upload'], default: 'manual' },
     confidence: { type: Number, min: 0, max: 1 },
     markedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    sessionNote: { type: String, default: '' },
+    session: { type: mongoose.Schema.Types.ObjectId, ref: 'CourseSession' },
+    locationCaptured: { lat: Number, lng: Number },
+    livenessPassed: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

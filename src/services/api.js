@@ -35,6 +35,7 @@ export const authApi = {
   register: (data) => api.post('/auth/register', data),
   logout: () => api.post('/auth/logout'),
   me: () => api.get('/auth/me'),
+  enrollFace: (data) => api.post('/auth/enroll-face', data),
 };
 
 export const profileApi = {
@@ -54,14 +55,17 @@ export const courseApi = {
   enroll: (id, studentId) => api.post(`/courses/${id}/enroll`, { studentId }),
 };
 
+export const sessionApi = {
+  create: (data) => api.post('/sessions', data),
+  getActive: (courseId) => api.get(`/sessions/active/${courseId}`),
+  close: (id) => api.put(`/sessions/${id}/close`),
+};
+
 export const attendanceApi = {
   mine: () => api.get('/attendance/me'),
   byCourse: (courseId) => api.get(`/attendance/course/${courseId}`),
   mark: (data) => api.post('/attendance/mark', data),
-  webcam: (formData) =>
-    api.post('/attendance/webcam', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  upload: (formData) =>
-    api.post('/attendance/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  markLive: (data) => api.post('/attendance/mark-live', data),
   remind: (data) => api.post('/attendance/remind', data),
 };
 
