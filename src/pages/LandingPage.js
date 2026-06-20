@@ -11,9 +11,7 @@ const LandingPage = () => {
     <div className="min-h-screen bg-white dark:bg-black">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-attendrix-rose text-white">
-            <Sparkles className="h-5 w-5" />
-          </div>
+          <img src="/logo.png" alt="Attendrix AI Logo" className="h-10 w-10 rounded-xl object-contain shadow-sm" />
           <span className="text-xl font-bold text-slate-900 dark:text-white">Attendrix AI</span>
         </div>
         <div className="flex items-center gap-3">

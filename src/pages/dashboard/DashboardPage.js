@@ -111,7 +111,7 @@ const DashboardPage = () => {
         {user.role !== 'teacher' && (
           <div>
             <h2 className="mb-4 text-lg font-bold text-slate-900 dark:text-white">Recent Activity</h2>
-            <AttendanceTable records={records} showConfidence />
+            <AttendanceTable records={records} showConfidence hideStudent={true} />
           </div>
         )}
       </div>

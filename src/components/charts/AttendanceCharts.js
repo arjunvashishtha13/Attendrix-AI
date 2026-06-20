@@ -12,6 +12,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from 'recharts';
 
 const COLORS = ['#e11d48', '#64748b', '#f59e0b'];
@@ -30,7 +31,7 @@ export const MonthlyTrendChart = ({ data = [] }) => (
         <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
         <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#94a3b8" />
         <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
-        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} />
+        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} itemStyle={{ color: '#fff' }} />
         <Area type="monotone" dataKey="present" stroke="#e11d48" fill="url(#presentGrad)" strokeWidth={2} />
         <Area type="monotone" dataKey="absent" stroke="#64748b" fill="transparent" strokeWidth={2} strokeDasharray="4 4" />
       </AreaChart>
@@ -46,7 +47,14 @@ export const CourseBarChart = ({ data = [] }) => (
         <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
         <XAxis dataKey="course" tick={{ fontSize: 11 }} stroke="#94a3b8" />
         <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
-        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} />
+        <Tooltip 
+          contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} 
+          itemStyle={{ color: '#fff' }} 
+          formatter={(value, name, props) => {
+            const p = props.payload;
+            return [`${value}% (${p.present} Present / ${p.present + p.absent} Total)`, 'Attendance'];
+          }}
+        />
         <Bar dataKey="percentage" fill="#e11d48" radius={[8, 8, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
@@ -61,7 +69,14 @@ export const SessionBarChart = ({ data = [] }) => (
         <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
         <XAxis dataKey="label" tick={{ fontSize: 11 }} stroke="#94a3b8" />
         <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
-        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} />
+        <Tooltip 
+          contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} 
+          itemStyle={{ color: '#fff' }} 
+          formatter={(value, name, props) => {
+            const p = props.payload;
+            return [`${value}% (${p.present} Present / ${p.present + p.absent} Total)`, 'Attendance'];
+          }}
+        />
         <Bar dataKey="percentage" fill="#e11d48" radius={[8, 8, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
@@ -83,17 +98,25 @@ export const PresentAbsentPie = ({ present = 0, absent = 0 }) => {
             data={data} 
             cx="50%" 
             cy="50%" 
-            innerRadius={40} 
-            outerRadius={65} 
+            innerRadius={50} 
+            outerRadius={80} 
             paddingAngle={4} 
             dataKey="value"
-            label={({ name, value }) => `${name}: ${value}`}
           >
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} />
+          <Tooltip 
+            contentStyle={{ borderRadius: 12, border: 'none', background: '#0f172a', color: '#fff' }} 
+            itemStyle={{ color: '#fff' }}
+            formatter={(value, name) => {
+              const total = present + absent;
+              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+              return [`${value} (${percentage}%)`, name];
+            }}
+          />
+          <Legend verticalAlign="bottom" height={36} iconType="circle" />
         </PieChart>
       </ResponsiveContainer>
     </div>

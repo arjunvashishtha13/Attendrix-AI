@@ -49,10 +49,8 @@ const Sidebar = ({ onNavigate }) => {
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-black">
-      <div className="mb-8 flex items-center gap-2 px-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-attendrix-rose text-white">
-          <Sparkles className="h-5 w-5" />
-        </div>
+      <div className="mb-8 flex items-center gap-3 px-2">
+        <img src="/logo.png" alt="Attendrix AI Logo" className="h-10 w-10 rounded-xl object-contain" />
         <div>
           <p className="text-sm font-bold text-slate-900 dark:text-white">Attendrix AI</p>
           <p className="text-xs text-slate-400 capitalize">{user?.role} portal</p>

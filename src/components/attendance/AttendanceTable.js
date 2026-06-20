@@ -6,7 +6,7 @@ const statusStyles = {
   late: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
 };
 
-const AttendanceTable = ({ records = [], showConfidence = false }) => {
+const AttendanceTable = ({ records = [], showConfidence = false, hideStudent = false }) => {
   if (!records.length) {
     return (
       <div className="card py-12 text-center text-sm text-slate-400">No attendance records yet.</div>
@@ -20,7 +20,7 @@ const AttendanceTable = ({ records = [], showConfidence = false }) => {
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50">
               <th className="px-6 py-4 font-semibold text-slate-500">Date</th>
-              <th className="px-6 py-4 font-semibold text-slate-500">Student</th>
+              {!hideStudent && <th className="px-6 py-4 font-semibold text-slate-500">Student</th>}
               <th className="px-6 py-4 font-semibold text-slate-500">Course</th>
               <th className="px-6 py-4 font-semibold text-slate-500">Status</th>
               <th className="px-6 py-4 font-semibold text-slate-500">Method</th>
@@ -36,9 +36,11 @@ const AttendanceTable = ({ records = [], showConfidence = false }) => {
                 <td className="px-6 py-4 text-slate-700 dark:text-slate-300">
                   {new Date(r.date).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">
-                  {r.student?.profile?.fullName || r.student?.username || '—'}
-                </td>
+                {!hideStudent && (
+                  <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">
+                    {r.student?.profile?.fullName || r.student?.username || '—'}
+                  </td>
+                )}
                 <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
                   {r.course?.code || '—'}
                 </td>

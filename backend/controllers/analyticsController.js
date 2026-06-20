@@ -22,7 +22,8 @@ exports.getDashboardStats = asyncHandler(async (req, res) => {
     }
   }
 
-  const records = await Attendance.find(match).populate('course', 'code name totalSessions');
+  const allRecords = await Attendance.find(match).populate('course', 'code name totalSessions');
+  const records = allRecords.filter(r => r.status !== 'failed');
 
   const present = records.filter((r) => r.status === 'present').length;
   const absent = records.filter((r) => r.status === 'absent').length;
