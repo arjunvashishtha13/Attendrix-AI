@@ -20,6 +20,8 @@ const userSchema = new mongoose.Schema(
       year: { type: Number, default: 1 },
       semester: { type: Number, default: 1 },
       phone: { type: String, default: '' },
+      department: { type: String, default: '' },
+      designation: { type: String, default: '' },
     },
     faceEmbeddings: { type: [[Number]], default: [] },
     hasEnrolledFace: { type: Boolean, default: false },

@@ -10,9 +10,11 @@ const router = express.Router();
 router.use(authenticate);
 
 router.get('/me', attendanceController.getMyAttendance);
+router.get('/verification-logs', authorize('admin', 'teacher'), attendanceController.getVerificationLogs);
 router.get('/course/:courseId', attendanceController.getAttendanceByCourse);
 router.post('/mark', authorize('admin', 'teacher'), attendanceController.markAttendance);
 router.post('/mark-live', attendanceController.markLiveAttendance);
+router.post('/log-failure', attendanceController.logFailure);
 // router.post('/upload', authorize('admin', 'teacher'), upload.single('photo'), attendanceController.uploadAttendance);
 router.post('/remind', authorize('admin', 'teacher'), attendanceController.sendReminder);
 

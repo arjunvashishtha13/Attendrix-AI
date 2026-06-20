@@ -72,6 +72,8 @@ export const attendanceApi = {
 export const analyticsApi = {
   dashboard: (params) => api.get('/analytics/dashboard', { params }),
   admin: () => api.get('/analytics/admin'),
+  teacherDashboard: (params) => api.get('/analytics/teacher-dashboard', { params }),
+  students: (params) => api.get('/analytics/students', { params }),
 };
 
 export const exportApi = {

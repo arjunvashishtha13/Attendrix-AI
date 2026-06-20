@@ -109,28 +109,26 @@ const WebcamCapture = ({ sessionId, onSuccess }) => {
       const leftEye = landmarks.getLeftEye();
       const rightEye = landmarks.getRightEye();
 
-      // Check specific challenge
       if (challenge.id === 'blink') {
         const leftEAR = calculateEAR(leftEye);
         const rightEAR = calculateEAR(rightEye);
-        if (leftEAR < 0.25 && rightEAR < 0.25) {
+        if (leftEAR < 0.30 && rightEAR < 0.30) {
           challengePassed = true;
         }
       } else if (challenge.id === 'smile') {
         const mouthWidth = Math.hypot(mouth[0].x - mouth[6].x, mouth[0].y - mouth[6].y);
         const mouthHeight = Math.hypot(mouth[3].x - mouth[9].x, mouth[3].y - mouth[9].y);
-        if (mouthHeight / mouthWidth > 0.4) {
+        if (mouthHeight / mouthWidth > 0.25) {
           challengePassed = true;
         }
       } else if (challenge.id === 'turnLeft') {
-        // Nose tip relative to jaw boundaries
         const jaw = landmarks.getJawOutline();
-        if (nose[3].x < jaw[3].x) { // Very simple heuristic
+        if (nose[3].x < jaw[5].x) { 
           challengePassed = true;
         }
       } else if (challenge.id === 'turnRight') {
         const jaw = landmarks.getJawOutline();
-        if (nose[3].x > jaw[13].x) {
+        if (nose[3].x > jaw[11].x) {
           challengePassed = true;
         }
       }
@@ -148,7 +146,7 @@ const WebcamCapture = ({ sessionId, onSuccess }) => {
           toast.error('Face lost during final verification step');
         }
       }
-    }, 150);
+    }, 80);
   };
 
   const sendToBackend = async (descriptorArray) => {

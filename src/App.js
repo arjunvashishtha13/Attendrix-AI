@@ -11,6 +11,7 @@ import OAuthCallback from './pages/auth/OAuthCallback';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import MyAttendancePage from './pages/attendance/MyAttendancePage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
+import VerificationCenterPage from './pages/analytics/VerificationCenterPage';
 import CoursesPage from './pages/courses/CoursesPage';
 import CourseDetailPage from './pages/courses/CourseDetailPage';
 import WebcamPage from './pages/webcam/WebcamPage';
@@ -58,6 +59,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['admin', 'teacher']}>
                   <AnalyticsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verification-center"
+              element={
+                <ProtectedRoute roles={['admin', 'teacher']}>
+                  <VerificationCenterPage />
                 </ProtectedRoute>
               }
             />

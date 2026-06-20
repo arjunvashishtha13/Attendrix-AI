@@ -3,6 +3,8 @@ import { Menu, Moon, Sun, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
+import NotificationDropdown from './NotificationDropdown';
+
 const Navbar = ({ onMenuClick, title }) => {
   const { user } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
@@ -23,9 +25,7 @@ const Navbar = ({ onMenuClick, title }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <button className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
-          <Bell className="h-5 w-5" />
-        </button>
+        <NotificationDropdown />
         <button
           onClick={toggleTheme}
           className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"

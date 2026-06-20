@@ -63,6 +63,9 @@ exports.markLiveAttendance = asyncHandler(async (req, res) => {
 
   if (session.location && session.location.lat && session.location.lng) {
     if (!latitude || !longitude) {
+      if (req.user.role === 'student') {
+        await Attendance.create({ course: course._id, session: session._id, student: req.user._id, status: 'failed', method: 'webcam', failureReason: 'geolocation_no_data', date: new Date() });
+      }
       throw new AppError('Location data is required for this session. Please enable GPS.', 403);
     }
     const distance = getDistanceFromLatLonInM(
@@ -70,6 +73,9 @@ exports.markLiveAttendance = asyncHandler(async (req, res) => {
       parseFloat(latitude), parseFloat(longitude)
     );
     if (distance > (session.location.radius || 50)) {
+      if (req.user.role === 'student') {
+        await Attendance.create({ course: course._id, session: session._id, student: req.user._id, status: 'failed', method: 'webcam', failureReason: 'geolocation_out_of_bounds', date: new Date() });
+      }
       throw new AppError(`You are too far from the classroom (${Math.round(distance)}m). You must be within ${session.location.radius || 50}m.`, 403);
     }
   }
@@ -86,6 +92,11 @@ exports.markLiveAttendance = asyncHandler(async (req, res) => {
   const match = findBestMatch(liveEmbedding, students);
 
   if (!match.matched) {
+    if (match.student) {
+      await Attendance.create({ course: course._id, session: session._id, student: match.student._id, status: 'failed', method: 'webcam', failureReason: 'face_mismatch_low_confidence', confidence: match.confidence, date: new Date() });
+    } else if (req.user.role === 'student') {
+      await Attendance.create({ course: course._id, session: session._id, student: req.user._id, status: 'failed', method: 'webcam', failureReason: 'face_mismatch_low_confidence', date: new Date() });
+    }
     return res.status(422).json({
       success: false,
       ...match,
@@ -93,6 +104,7 @@ exports.markLiveAttendance = asyncHandler(async (req, res) => {
   }
 
   if (req.user.role === 'student' && match.student._id.toString() !== req.user._id.toString()) {
+    await Attendance.create({ course: course._id, session: session._id, student: req.user._id, status: 'failed', method: 'webcam', failureReason: 'spoof_attempt_wrong_student', confidence: match.confidence, date: new Date() });
     return res.status(403).json({
       success: false,
       message: 'You can only mark attendance for yourself. Face mismatch.',
@@ -166,4 +178,53 @@ exports.sendReminder = asyncHandler(async (req, res) => {
 
   const result = await sendAttendanceReminder(student, course, { present, absent, percentage });
   res.json({ success: true, ...result });
+});
+
+exports.getVerificationLogs = asyncHandler(async (req, res) => {
+  let courseIds = [];
+  if (req.user.role === 'teacher') {
+    const courses = await Course.find({ teacher: req.user._id }).select('_id');
+    courseIds = courses.map((c) => c._id);
+  } else if (req.user.role === 'admin') {
+    const courses = await Course.find().select('_id');
+    courseIds = courses.map((c) => c._id);
+  } else {
+    throw new AppError('Not authorized', 403);
+  }
+
+  const logs = await Attendance.find({ course: { $in: courseIds } })
+    .populate('student', 'username profile email')
+    .populate('course', 'code name')
+    .sort({ date: -1 })
+    .limit(100);
+
+  res.json({ success: true, logs });
+});
+
+exports.logFailure = asyncHandler(async (req, res) => {
+  const { sessionId, reason, studentId } = req.body;
+  
+  if (!sessionId) throw new AppError('sessionId required', 400);
+  const session = await CourseSession.findById(sessionId);
+  if (!session) throw new AppError('Session not found', 404);
+
+  // If studentId isn't provided, and the user is a student, use their ID
+  const targetStudentId = studentId || (req.user.role === 'student' ? req.user._id : null);
+  
+  // We can only log if we know which student failed (or if we make student optional, but it's required in schema)
+  if (!targetStudentId) {
+    return res.json({ success: true, message: 'Failure not logged because student could not be identified.' });
+  }
+
+  await Attendance.create({
+    course: session.course,
+    session: session._id,
+    student: targetStudentId,
+    status: 'failed',
+    method: 'webcam',
+    failureReason: reason,
+    date: new Date()
+  });
+
+  res.json({ success: true });
 });

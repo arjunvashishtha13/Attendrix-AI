@@ -8,6 +8,8 @@ const notificationSchema = new mongoose.Schema(
     message: { type: String, required: true },
     sent: { type: Boolean, default: false },
     sentAt: { type: Date },
+    read: { type: Boolean, default: false },
+    actionUrl: { type: String },
   },
   { timestamps: true }
 );

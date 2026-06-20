@@ -5,14 +5,21 @@ const asyncHandler = require('../middleware/asyncHandler');
 const monthKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 
 exports.getDashboardStats = asyncHandler(async (req, res) => {
-  const { courseId } = req.query;
+  const { courseId, startDate, endDate, sessionId } = req.query;
   const match = {};
   if (courseId) match.course = courseId;
+  if (sessionId) match.session = sessionId;
+  
+  if (!sessionId && startDate && endDate) {
+    match.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+  }
 
   if (req.user.role === 'student') match.student = req.user._id;
   if (req.user.role === 'teacher') {
-    const teacherCourses = await Course.find({ teacher: req.user._id }).select('_id');
-    match.course = { $in: teacherCourses.map((c) => c._id) };
+    if (!courseId) {
+      const teacherCourses = await Course.find({ teacher: req.user._id }).select('_id');
+      match.course = { $in: teacherCourses.map((c) => c._id) };
+    }
   }
 
   const records = await Attendance.find(match).populate('course', 'code name totalSessions');

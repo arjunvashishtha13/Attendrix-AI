@@ -9,6 +9,7 @@ import {
   BarChart3,
   LogOut,
   Sparkles,
+  Shield,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -34,6 +35,7 @@ const Sidebar = ({ onNavigate }) => {
     { to: '/courses', label: 'Courses', icon: BookOpen },
     { to: '/students', label: 'Students', icon: Users },
     { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/verification-center', label: 'Verification Center', icon: Shield },
     { to: '/profile', label: 'Profile', icon: UserCircle },
   ];
 

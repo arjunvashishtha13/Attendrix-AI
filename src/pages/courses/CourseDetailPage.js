@@ -39,6 +39,21 @@ const CourseDetailPage = () => {
     load();
   }, [id]);
 
+  useEffect(() => {
+    let intervalId;
+    if (activeSession) {
+      intervalId = setInterval(async () => {
+        try {
+          const { data } = await attendanceApi.byCourse(id);
+          setRecords(data.records);
+        } catch (err) {
+          // silent fail
+        }
+      }, 5000);
+    }
+    return () => clearInterval(intervalId);
+  }, [activeSession, id]);
+
   const startSession = async () => {
     setSessionLoading(true);
     let locationData = null;
@@ -151,10 +166,31 @@ const CourseDetailPage = () => {
 
               {activeSession ? (
                 <div className="space-y-4">
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-emerald-200 dark:border-emerald-800 flex flex-col items-center justify-center text-center">
+                      <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                        {records.filter(r => r.session === activeSession._id && r.status === 'present').length}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-500 uppercase mt-1">Verified</span>
+                    </div>
+                    <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center">
+                      <span className="text-2xl font-bold text-slate-600 dark:text-slate-400">
+                        {Math.max(0, (course?.students?.length || 0) - records.filter(r => r.session === activeSession._id && r.status === 'present').length)}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-500 uppercase mt-1">Pending</span>
+                    </div>
+                    <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-rose-200 dark:border-rose-800 flex flex-col items-center justify-center text-center">
+                      <span className="text-2xl font-bold text-rose-600 dark:text-rose-400">
+                        {records.filter(r => r.session === activeSession._id && r.status === 'failed').length}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-500 uppercase mt-1">Rejected</span>
+                    </div>
+                  </div>
+
                   {activeSession.location && (
-                    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800">
                       <MapPin className="w-4 h-4 text-emerald-500" />
-                      Geofence Active (50m radius)
+                      Geofence Active
                     </div>
                   )}
                   <button 

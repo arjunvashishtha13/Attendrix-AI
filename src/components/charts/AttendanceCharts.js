@@ -79,7 +79,16 @@ export const PresentAbsentPie = ({ present = 0, absent = 0 }) => {
       <h3 className="mb-4 text-sm font-semibold text-slate-500 dark:text-slate-400">Present vs Absent</h3>
       <ResponsiveContainer width="100%" height="85%">
         <PieChart>
-          <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value">
+          <Pie 
+            data={data} 
+            cx="50%" 
+            cy="50%" 
+            innerRadius={40} 
+            outerRadius={65} 
+            paddingAngle={4} 
+            dataKey="value"
+            label={({ name, value }) => `${name}: ${value}`}
+          >
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
             ))}

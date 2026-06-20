@@ -15,15 +15,24 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user?.profile) {
-      setForm({
-        fullName: user.profile.fullName || '',
-        enrollmentNumber: user.profile.enrollmentNumber || '',
-        branch: user.profile.branch || '',
-        employeeId: user.profile.employeeId || '',
-        phone: user.profile.phone || '',
-        year: user.profile.year || 1,
-        semester: user.profile.semester || 1,
-      });
+      if (user.role === 'student') {
+        setForm({
+          fullName: user.profile.fullName || '',
+          phone: user.profile.phone || '',
+          enrollmentNumber: user.profile.enrollmentNumber || '',
+          branch: user.profile.branch || '',
+          year: user.profile.year || 1,
+          semester: user.profile.semester || 1,
+        });
+      } else {
+        setForm({
+          fullName: user.profile.fullName || '',
+          phone: user.profile.phone || '',
+          employeeId: user.profile.employeeId || '',
+          department: user.profile.department || '',
+          designation: user.profile.designation || '',
+        });
+      }
     }
   }, [user]);
 
