@@ -6,10 +6,12 @@ const asyncHandler = require('../middleware/asyncHandler');
 
 exports.getTeacherDashboard = asyncHandler(async (req, res) => {
   const teacherId = req.user._id;
-  const { startDate, endDate, sessionId } = req.query;
+  const { startDate, endDate, sessionId, courseId } = req.query;
 
   // Active courses
-  const courses = await Course.find({ teacher: teacherId });
+  const courseMatch = { teacher: teacherId };
+  if (courseId) courseMatch._id = courseId;
+  const courses = await Course.find(courseMatch);
   const courseIds = courses.map((c) => c._id);
   
   // Total students (unique)
@@ -48,19 +50,32 @@ exports.getTeacherDashboard = asyncHandler(async (req, res) => {
   const totalSessions = await CourseSession.countDocuments(sessionMatch);
 
   // Students At Risk (Calculated based on filtered records)
-  const filteredRecords = await Attendance.find(match);
+  const filteredRecords = await Attendance.find(match).populate('student', 'username profile email');
   const studentStats = {};
   filteredRecords.forEach(r => {
     if (!r.student) return;
-    const sId = r.student.toString();
-    if (!studentStats[sId]) studentStats[sId] = { present: 0, total: 0 };
+    const sId = r.student._id.toString();
+    if (!studentStats[sId]) {
+      studentStats[sId] = {
+        _id: sId,
+        name: r.student.profile?.fullName || r.student.username,
+        email: r.student.email,
+        present: 0,
+        total: 0
+      };
+    }
     studentStats[sId].total++;
     if (r.status === 'present') studentStats[sId].present++;
   });
   
   let studentsAtRiskCount = 0;
+  const studentsAtRiskList = [];
   Object.values(studentStats).forEach(s => {
-    if ((s.present / s.total) < 0.75) studentsAtRiskCount++;
+    const percentage = Math.round((s.present / s.total) * 100);
+    if (percentage < 75) {
+      studentsAtRiskCount++;
+      studentsAtRiskList.push({ ...s, percentage });
+    }
   });
 
   res.json({
@@ -72,6 +87,7 @@ exports.getTeacherDashboard = asyncHandler(async (req, res) => {
       totalSessions: totalSessions,
       pendingRequests: 0, // Placeholder if you add manual requests later
       studentsAtRisk: studentsAtRiskCount,
+      studentsAtRiskList,
     }
   });
 });

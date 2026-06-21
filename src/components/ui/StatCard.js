@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StatCard = ({ title, value, subtitle, icon: Icon, accent = 'rose' }) => {
+const StatCard = ({ title, value, subtitle, icon: Icon, accent = 'rose', onClick }) => {
   const accents = {
     rose: 'from-rose-500/20 to-rose-600/5 text-attendrix-rose',
     green: 'from-emerald-500/20 to-emerald-600/5 text-emerald-500',
@@ -9,7 +9,7 @@ const StatCard = ({ title, value, subtitle, icon: Icon, accent = 'rose' }) => {
   };
 
   return (
-    <div className="card group animate-fade-in hover:-translate-y-0.5">
+    <div onClick={onClick} className={`card group animate-fade-in hover:-translate-y-0.5 ${onClick ? 'cursor-pointer' : ''}`}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
