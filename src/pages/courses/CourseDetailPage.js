@@ -17,7 +17,7 @@ const CourseDetailPage = () => {
   const [useGeofence, setUseGeofence] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+
 
   useEffect(() => {
     const load = async () => {
@@ -112,14 +112,11 @@ const CourseDetailPage = () => {
   const handleSearch = async (e) => {
     setSearchQuery(e.target.value);
     if (e.target.value.length > 1) {
-      setIsSearching(true);
       try {
         const { data } = await profileApi.searchUsers({ role: 'student', search: e.target.value });
         setSearchResults(data.users.filter(u => !course.students.find(s => s._id === u._id)));
       } catch {
         // ignore
-      } finally {
-        setIsSearching(false);
       }
     } else {
       setSearchResults([]);

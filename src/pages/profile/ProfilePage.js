@@ -8,10 +8,8 @@ import { useAuth } from '../../context/AuthContext';
 
 const ProfilePage = () => {
   const { user, refreshUser } = useAuth();
-  const fileRef = useRef();
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (user?.profile) {
@@ -47,22 +45,6 @@ const ProfilePage = () => {
       toast.error(err.message);
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleFaceUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append('photo', file);
-      await profileApi.registerFace(fd);
-      toast.success('Face registered for AI attendance');
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      setUploading(false);
     }
   };
 
