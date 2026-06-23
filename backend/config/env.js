@@ -6,7 +6,7 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET || 'attendrix-dev-secret-change-in-production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:3001',
-  faceConfidenceThreshold: parseFloat(process.env.FACE_CONFIDENCE_THRESHOLD || '0.72'),
+  faceConfidenceThreshold: parseFloat(process.env.FACE_CONFIDENCE_THRESHOLD || '0.70'),
   smtp: {
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587', 10),

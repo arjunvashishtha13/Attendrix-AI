@@ -4,7 +4,7 @@ const AppError = require('../utils/AppError');
 const asyncHandler = require('../middleware/asyncHandler');
 
 exports.createCourse = asyncHandler(async (req, res) => {
-  const { code, name, schedule, studentIds, location } = req.body;
+  const { code, name, schedule, studentIds, location, department } = req.body;
   if (!code || !name) throw new AppError('Course code and name required', 400);
 
   const teacherId = req.user.role === 'admin' ? req.body.teacherId || req.user._id : req.user._id;
@@ -16,6 +16,7 @@ exports.createCourse = asyncHandler(async (req, res) => {
     students: studentIds || [],
     schedule,
     location,
+    department: department || undefined,
   });
 
   await course.populate('teacher', 'username profile email role');

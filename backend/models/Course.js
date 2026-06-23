@@ -5,6 +5,8 @@ const courseSchema = new mongoose.Schema(
     code: { type: String, required: true, unique: true, uppercase: true, trim: true },
     name: { type: String, required: true, trim: true },
     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    department: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
+    semester: { type: Number, default: 1 },
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     schedule: { type: String, default: '' },
     totalSessions: { type: Number, default: 30 },

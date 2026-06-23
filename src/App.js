@@ -18,7 +18,10 @@ import WebcamPage from './pages/webcam/WebcamPage';
 import ProfilePage from './pages/profile/ProfilePage';
 import EnrollFacePage from './pages/profile/EnrollFacePage';
 import StudentsPage from './pages/students/StudentsPage';
-import AdminPage from './pages/admin/AdminPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import UserManagementPage from './pages/admin/UserManagementPage';
+import DepartmentManagementPage from './pages/admin/DepartmentManagementPage';
+import AdminSettingsPage from './pages/admin/AdminSettingsPage';
 
 function App() {
   return (
@@ -104,9 +107,55 @@ function App() {
             />
             <Route
               path="/admin"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
+            <Route
+              path="/admin/dashboard"
               element={
                 <ProtectedRoute roles={['admin']}>
-                  <AdminPage />
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <UserManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/departments"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <DepartmentManagementPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/courses"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  {/* Reuse CoursesPage with Admin props or leave as placeholder for now */}
+                  <CoursesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/verification"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  {/* VerificationCenterPage already handles admin role */}
+                  <VerificationCenterPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <AdminSettingsPage />
                 </ProtectedRoute>
               }
             />

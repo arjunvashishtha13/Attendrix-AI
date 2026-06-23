@@ -6,7 +6,7 @@ const DashboardLayout = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-attendrix-slate">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-black">
       <div
         className={`fixed inset-0 z-40 bg-black/50 transition lg:hidden ${sidebarOpen ? 'visible' : 'invisible opacity-0'}`}
         onClick={() => setSidebarOpen(false)}

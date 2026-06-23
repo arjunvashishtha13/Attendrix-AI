@@ -1,5 +1,30 @@
 const Notification = require('../models/Notification');
+const User = require('../models/User');
+const AppError = require('../utils/AppError');
 const asyncHandler = require('../middleware/asyncHandler');
+
+exports.broadcast = asyncHandler(async (req, res) => {
+  const { targetRole, targetDepartment, subject, message, type } = req.body;
+  
+  const filter = {};
+  if (targetRole && targetRole !== 'all') filter.role = targetRole;
+  if (targetDepartment) filter['profile.departmentRef'] = targetDepartment;
+
+  const users = await User.find(filter).select('_id');
+  if (!users.length) throw new AppError('No users found matching criteria', 404);
+
+  const notifications = users.map(u => ({
+    user: u._id,
+    type: type || 'alert',
+    subject,
+    message,
+    sent: true,
+    sentAt: new Date()
+  }));
+
+  await Notification.insertMany(notifications);
+  res.json({ success: true, message: `Broadcast sent to ${users.length} users` });
+});
 
 exports.getNotifications = asyncHandler(async (req, res) => {
   const notifications = await Notification.find({ user: req.user._id })

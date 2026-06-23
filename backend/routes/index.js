@@ -8,6 +8,9 @@ const exportRoutes = require('./exportRoutes');
 const sessionRoutes = require('./sessionRoutes');
 const notificationRoutes = require('./notificationRoutes');
 
+const adminRoutes = require('./adminRoutes');
+const departmentRoutes = require('./departmentRoutes');
+
 const router = express.Router();
 
 router.use('/auth', authRoutes);
@@ -18,6 +21,8 @@ router.use('/attendance', attendanceRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/export', exportRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/admin', adminRoutes);
+router.use('/departments', departmentRoutes);
 
 router.get('/health', (req, res) => {
   res.json({ success: true, service: 'Attendrix AI API', version: '1.0.0' });

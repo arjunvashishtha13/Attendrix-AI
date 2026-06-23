@@ -40,8 +40,13 @@ const Sidebar = ({ onNavigate }) => {
   ];
 
   const adminLinks = [
-    ...teacherLinks,
-    { to: '/admin', label: 'Admin Panel', icon: Sparkles },
+    { to: '/admin/dashboard', label: 'Admin Dashboard', icon: LayoutDashboard },
+    { to: '/admin/users', label: 'User Management', icon: Users },
+    { to: '/admin/departments', label: 'Departments', icon: BookOpen },
+    { to: '/admin/courses', label: 'Courses', icon: BookOpen },
+    { to: '/admin/verification', label: 'Verification Center', icon: Shield },
+    { to: '/admin/settings', label: 'Settings', icon: Sparkles },
+    { to: '/profile', label: 'Profile', icon: UserCircle },
   ];
 
   const links =

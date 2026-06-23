@@ -8,6 +8,9 @@ const router = express.Router();
 router.use(authenticate);
 router.use(authorize('admin', 'teacher', 'student'));
 
+router.get('/csv', exportController.exportCSV);
+router.get('/pdf', exportController.exportPDF);
+
 router.get('/:courseId/csv', exportController.exportCSV);
 router.get('/:courseId/pdf', exportController.exportPDF);
 

@@ -4,7 +4,7 @@ const AppError = require('../utils/AppError');
 const asyncHandler = require('./asyncHandler');
 const { jwtSecret } = require('../config/env');
 
-const authenticate = asyncHandler(async (req, res, next) => {
+const protect = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token =
     (authHeader && authHeader.startsWith('Bearer ') && authHeader.split(' ')[1]) ||
@@ -25,4 +25,13 @@ const authenticate = asyncHandler(async (req, res, next) => {
   next();
 });
 
-module.exports = { authenticate };
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new AppError(`Role (${req.user.role}) is not allowed to access this resource`, 403);
+    }
+    next();
+  };
+};
+
+module.exports = { protect, authorize, authenticate: protect };

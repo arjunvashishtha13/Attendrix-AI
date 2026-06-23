@@ -92,59 +92,71 @@ const WebcamCapture = ({ sessionId, onSuccess }) => {
 
   const startLivenessDetection = (challenge) => {
     let challengePassed = false;
+    let isProcessingFrame = false;
 
     intervalRef.current = setInterval(async () => {
-      if (!webcamRef.current?.video || challengePassed) return;
-      const video = webcamRef.current.video;
+      if (!webcamRef.current?.video || challengePassed || isProcessingFrame) return;
+      isProcessingFrame = true;
       
-      // OPTIMIZATION: Only compute landmarks during the challenge, not descriptors!
-      const detection = await faceapi.detectSingleFace(video)
-        .withFaceLandmarks();
-
-      if (!detection) return; // No face found this frame
-
-      const landmarks = detection.landmarks;
-      const nose = landmarks.getNose();
-      const mouth = landmarks.getMouth();
-      const leftEye = landmarks.getLeftEye();
-      const rightEye = landmarks.getRightEye();
-
-      if (challenge.id === 'blink') {
-        const leftEAR = calculateEAR(leftEye);
-        const rightEAR = calculateEAR(rightEye);
-        if (leftEAR < 0.30 && rightEAR < 0.30) {
-          challengePassed = true;
-        }
-      } else if (challenge.id === 'smile') {
-        const mouthWidth = Math.hypot(mouth[0].x - mouth[6].x, mouth[0].y - mouth[6].y);
-        const mouthHeight = Math.hypot(mouth[3].x - mouth[9].x, mouth[3].y - mouth[9].y);
-        if (mouthHeight / mouthWidth > 0.25) {
-          challengePassed = true;
-        }
-      } else if (challenge.id === 'turnLeft') {
-        const jaw = landmarks.getJawOutline();
-        if (nose[3].x < jaw[5].x) { 
-          challengePassed = true;
-        }
-      } else if (challenge.id === 'turnRight') {
-        const jaw = landmarks.getJawOutline();
-        if (nose[3].x > jaw[11].x) {
-          challengePassed = true;
-        }
-      }
-
-      if (challengePassed) {
-        clearInterval(intervalRef.current);
-        setState('verifying');
+      try {
+        const video = webcamRef.current.video;
         
-        // NOW we extract the heavy face descriptor just once for verification
-        const finalDetection = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
-        if (finalDetection) {
-          await sendToBackend(Array.from(finalDetection.descriptor));
-        } else {
-          setState('idle');
-          toast.error('Face lost during final verification step');
+        // OPTIMIZATION: Only compute landmarks during the challenge, not descriptors!
+        const detection = await faceapi.detectSingleFace(video)
+          .withFaceLandmarks();
+
+        if (!detection) {
+          isProcessingFrame = false;
+          return; // No face found this frame
         }
+
+        const landmarks = detection.landmarks;
+        const nose = landmarks.getNose();
+        const mouth = landmarks.getMouth();
+        const leftEye = landmarks.getLeftEye();
+        const rightEye = landmarks.getRightEye();
+
+        if (challenge.id === 'blink') {
+          const leftEAR = calculateEAR(leftEye);
+          const rightEAR = calculateEAR(rightEye);
+          if (leftEAR < 0.35 && rightEAR < 0.35) {
+            challengePassed = true;
+          }
+        } else if (challenge.id === 'smile') {
+          const mouthWidth = Math.hypot(mouth[0].x - mouth[6].x, mouth[0].y - mouth[6].y);
+          const mouthHeight = Math.hypot(mouth[3].x - mouth[9].x, mouth[3].y - mouth[9].y);
+          if (mouthHeight / mouthWidth > 0.18) {
+            challengePassed = true;
+          }
+        } else if (challenge.id === 'turnLeft') {
+          const jaw = landmarks.getJawOutline();
+          if (nose[3].x < jaw[3].x) { 
+            challengePassed = true;
+          }
+        } else if (challenge.id === 'turnRight') {
+          const jaw = landmarks.getJawOutline();
+          if (nose[3].x > jaw[13].x) {
+            challengePassed = true;
+          }
+        }
+
+        if (challengePassed) {
+          clearInterval(intervalRef.current);
+          setState('verifying');
+          
+          // NOW we extract the heavy face descriptor just once for verification
+          const finalDetection = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+          if (finalDetection) {
+            await sendToBackend(Array.from(finalDetection.descriptor));
+          } else {
+            setState('idle');
+            toast.error('Face lost during final verification step');
+          }
+        }
+      } catch (err) {
+        console.error('Error during liveness detection:', err);
+      } finally {
+        isProcessingFrame = false;
       }
     }, 80);
   };
