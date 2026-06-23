@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const apiRoutes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const { clientUrl } = require('./config/env');
@@ -28,6 +29,16 @@ app.use(cookieParser());
 
 app.use('/api/v1', apiRoutes);
 
+// Serve React frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '..', 'build');
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
+
 app.use(errorHandler);
 
 module.exports = app;
+
