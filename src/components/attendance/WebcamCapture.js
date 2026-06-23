@@ -4,7 +4,7 @@ import * as faceapi from 'face-api.js';
 import { Camera, RefreshCw, CheckCircle2, MapPin, Loader2, Activity } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { attendanceApi } from '../../services/api';
-import LoadingSpinner from '../ui/LoadingSpinner';
+
 
 const CHALLENGES = [
   { id: 'blink', label: 'Blink Your Eyes' },
@@ -16,10 +16,7 @@ const CHALLENGES = [
 const WebcamCapture = ({ sessionId, onSuccess }) => {
   const webcamRef = useRef(null);
   const [modelsLoaded, setModelsLoaded] = useState(false);
-  const [capturing, setCapturing] = useState(false);
   const [lastResult, setLastResult] = useState(null);
-  
-  // State machine: idle -> locating -> challenging -> verifying -> complete
   const [state, setState] = useState('idle');
   const [locationData, setLocationData] = useState(null);
   const [currentChallenge, setCurrentChallenge] = useState(null);
@@ -162,7 +159,6 @@ const WebcamCapture = ({ sessionId, onSuccess }) => {
   };
 
   const sendToBackend = async (descriptorArray) => {
-    setCapturing(true);
     try {
       const { data } = await attendanceApi.markLive({
         sessionId,
@@ -178,7 +174,6 @@ const WebcamCapture = ({ sessionId, onSuccess }) => {
       setLastResult({ success: false, message: err.response?.data?.message || err.message });
       toast.error(err.response?.data?.message || 'Verification failed');
     } finally {
-      setCapturing(false);
       setState('idle');
     }
   };

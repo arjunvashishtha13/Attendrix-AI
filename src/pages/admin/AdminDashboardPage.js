@@ -4,7 +4,7 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import StatCard from '../../components/ui/StatCard';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import api from '../../services/api';
-import { Users, BookOpen, Building2, ShieldCheck, Activity, CheckCircle2 } from 'lucide-react';
+import { Users, Building2, BookOpen, Activity, ShieldCheck } from 'lucide-react';
 
 const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
