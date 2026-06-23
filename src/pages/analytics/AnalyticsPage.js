@@ -50,6 +50,7 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     load(courseId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId, dateFilter]);
 
   const handleExport = async (type) => {

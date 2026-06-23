@@ -3,7 +3,7 @@ import DashboardLayout from '../../components/layout/DashboardLayout';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
-import { Plus, Edit2, Trash2, Search, Filter } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search } from 'lucide-react';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
