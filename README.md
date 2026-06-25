@@ -9,8 +9,7 @@
 <h1 align="center">Attendrix AI</h1>
 
 <p align="center">
-  <b>Attendance intelligence built for modern teams.</b><br/>
-  A state-of-the-art, AI-powered attendance management platform that streamlines the attendance process for educational institutions by replacing manual roll calls with automated, secure, and frictionless identity verification using facial recognition, liveness detection, and geolocation.
+  <b>A full-stack AI-powered attendance management platform that automates attendance using facial recognition, liveness detection, geolocation, and role-based access control.</b>
 </p>
 
 <p align="center">
@@ -24,6 +23,16 @@
 </p>
 
 ---
+## 🚀 Core Features
+
+- 🤖 AI-powered Face Recognition & Liveness Detection
+- 📍 Geofenced Attendance Verification
+- 🔐 JWT Authentication & Role-Based Access Control
+- 📊 Analytics Dashboards & Attendance Insights
+- 📧 Automated Email Notifications
+- 📄 PDF & CSV Report Generation
+- ⚡ RESTful APIs with MongoDB
+- 📱 Responsive React Interface
 
 ## ✨ Key Highlights
 
@@ -36,6 +45,13 @@
 - **🚀 Scalable REST Architecture**: A high-performance Express.js backend with an optimized MongoDB database schema, ready to scale across thousands of concurrent student requests.
 
 ---
+## 🏛 System Design
+
+- MVC backend architecture
+- RESTful API design
+- Stateless JWT authentication
+- Role-Based Access Control (RBAC)
+- Modular React frontend
 
 ## 🛠️ Technology Stack
 
@@ -132,6 +148,5 @@ Attendrix-AI/
 ---
 
 <p align="center">
-  <b>Attendrix AI</b> — Revolutionizing classroom management with Artificial Intelligence.<br/>
-  <a href="https://attendrix-ai.vercel.app/">🔗 Live Demo</a>
+Built with ❤️ using React, Node.js, Express, MongoDB and AI-powered facial recognition.
 </p>
