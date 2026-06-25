@@ -1,8 +1,21 @@
-# 🎓 Attendrix AI
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
+  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+</p>
 
-**Attendrix AI** is a state-of-the-art, AI-powered attendance management platform. It streamlines the attendance process for educational institutions by replacing manual roll calls with automated, secure, and frictionless identity verification using facial recognition, liveness detection, and geolocation.
+<h1 align="center">Attendrix AI</h1>
 
-### 🔗 [Live Demo → attendrix-ai.vercel.app](https://attendrix-ai.vercel.app/)
+<p align="center">
+  <b>Attendance intelligence built for modern teams.</b><br/>
+  A state-of-the-art, AI-powered attendance management platform that streamlines the attendance process for educational institutions by replacing manual roll calls with automated, secure, and frictionless identity verification using facial recognition, liveness detection, and geolocation.
+</p>
+
+<p align="center">
+  <a href="https://attendrix-ai.vercel.app/"><b>🔗 Live Demo → attendrix-ai.vercel.app</b></a>
+</p>
 
 <p align="center">
   <img src="docs/screenshot-light.png" width="49%" alt="Attendrix Light Mode" />
