@@ -13,13 +13,15 @@ const corsOrigin = (origin, callback) => {
   const allowed =
     [clientUrl, 'http://localhost:3000', 'http://localhost:3001'].includes(origin) ||
     /^http:\/\/localhost:\d+$/.test(origin) ||
-    /^http:\/\/127\.0\.0\.1:\d+$/.test(origin);
+    /^http:\/\/127\.0\.0\.1:\d+$/.test(origin) ||
+    /\.vercel\.app$/.test(origin) ||
+    /\.onrender\.com$/.test(origin);
   callback(null, allowed);
 };
 
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' ? [clientUrl] : corsOrigin,
+    origin: corsOrigin,
     credentials: true,
   })
 );
